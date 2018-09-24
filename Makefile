@@ -1,3 +1,3 @@
 .PHONY: test
 test:
-	@pytest --pylint --black pymessagebus
+	@pytest --pylint --black --mypy pymessagebus
