@@ -9,13 +9,13 @@ class MessageHandlerNotFoundError(KeyError):
 
 class MessageBus:
     def __init__(self) -> None:
-        self._handlers: t.Dict[object, t.List[t.Callable]] = defaultdict(list)
+        self._handlers: t.Dict[type, t.List[t.Callable]] = defaultdict(list)
 
-    def add_handler(self, message_class: object, message_handler: t.Callable) -> None:
+    def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
         self._handlers[message_class].append(message_handler)
 
     def handle(self, message: object) -> t.List[t.Any]:
-        if message.__class__ not in self._handlers:
+        if not self.has_handler_for(message.__class__):
             raise MessageHandlerNotFoundError(
                 f"No handler found for message class '{message.__class__}''"
             )
@@ -24,6 +24,9 @@ class MessageBus:
         for handler in handlers:
             results.append(self._trigger_handler(message, handler))
         return results
+
+    def has_handler_for(self, message_class: type) -> bool:
+        return message_class in self._handlers
 
     @staticmethod
     def _trigger_handler(message: object, handler: t.Callable) -> t.Any:

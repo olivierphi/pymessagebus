@@ -11,6 +11,14 @@ def test_simplest_handler():
     assert handling_result == [1]
 
 
+def test_has_handler_for():
+    sut = MessageBus()
+    sut.add_handler(MessageClassOne, get_one)
+
+    assert sut.has_handler_for(MessageClassOne) is True
+    assert sut.has_handler_for(MessageClassTwo) is False
+
+
 def test_handlers_get_message():
     sut = MessageBus()
     sut.add_handler(EmptyMessage, identity_handler)
