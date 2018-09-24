@@ -16,5 +16,9 @@ class MessageBus(ABC):
         pass
 
 
+class MessageHandlerMappingRequiresATypeError(TypeError):
+    pass
+
+
 class MessageHandlerNotFoundError(KeyError):
     pass

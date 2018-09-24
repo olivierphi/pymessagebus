@@ -9,12 +9,17 @@ class MessageBus(api.MessageBus):
         self._handlers: t.Dict[type, t.List[t.Callable]] = defaultdict(list)
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
+        if type(message_class) is not type:  # pylint: disable=unidiomatic-typecheck
+            raise api.MessageHandlerMappingRequiresATypeError(
+                f"add_handler() first argument must be a type, got '{type(message_class)}"
+            )
+
         self._handlers[message_class].append(message_handler)
 
     def handle(self, message: object) -> t.List[t.Any]:
         if not self.has_handler_for(message.__class__):
             raise api.MessageHandlerNotFoundError(
-                f"No handler found for message class '{message.__class__}''"
+                f"No handler found for message class '{message.__class__}"
             )
         handlers = self._handlers[message.__class__]
         results = []
