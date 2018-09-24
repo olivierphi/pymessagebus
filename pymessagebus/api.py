@@ -16,9 +16,27 @@ class MessageBus(ABC):
         pass
 
 
+class CommandBus(ABC):
+    @abstractmethod
+    def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
+        pass
+
+    @abstractmethod
+    def handle(self, message: object) -> None:
+        pass
+
+    @abstractmethod
+    def has_handler_for(self, message_class: type) -> bool:
+        pass
+
+
 class MessageHandlerMappingRequiresATypeError(TypeError):
     pass
 
 
-class MessageHandlerNotFoundError(KeyError):
+class CommandHandlerNotFoundError(KeyError):
+    pass
+
+
+class CommandHandlerAlreadyRegisteredForATypeError(RuntimeError):
     pass

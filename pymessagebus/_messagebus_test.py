@@ -2,11 +2,16 @@
 
 import pytest
 
-from pymessagebus.api import (
-    MessageHandlerNotFoundError,
-    MessageHandlerMappingRequiresATypeError,
-)
+from pymessagebus.api import MessageHandlerMappingRequiresATypeError
 from pymessagebus._messagebus import MessageBus
+
+
+def test_simplest_handler_can_have_no_handlers_for_a_message():
+    sut = MessageBus()
+
+    message = EmptyMessage()
+    handling_result = sut.handle(message)
+    assert handling_result == []
 
 
 def test_simplest_handler():
@@ -32,14 +37,6 @@ def test_handlers_get_message():
     message = EmptyMessage()
     handling_result = sut.handle(message)
     assert handling_result == [message]
-
-
-def test_simplest_handler_not_found():
-    sut = MessageBus()
-
-    message = EmptyMessage()
-    with pytest.raises(MessageHandlerNotFoundError):
-        sut.handle(message)
 
 
 def test_handler_is_not_a_type():
