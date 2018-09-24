@@ -1,0 +1,10 @@
+[MASTER]
+ignore=.git
+
+[pytest]
+# one of PyTest dependencies raises warnings :-/
+filterwarnings =
+    ignore::DeprecationWarning
+
+[MESSAGES CONTROL]
+disable=missing-docstring,useless-import-alias
