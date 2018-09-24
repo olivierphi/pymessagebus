@@ -17,6 +17,7 @@ def test_simplest_handler_can_have_no_handlers_for_a_message():
 def test_simplest_handler():
     sut = MessageBus()
     sut.add_handler(EmptyMessage, get_one)
+
     message = EmptyMessage()
     handling_result = sut.handle(message)
     assert handling_result == [1]
