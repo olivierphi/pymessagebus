@@ -1,13 +1,10 @@
-from abc import ABC
 from collections import defaultdict
 import typing as t
 
-
-class MessageHandlerNotFoundError(KeyError):
-    pass
+import pymessagebus.api as api
 
 
-class MessageBus:
+class MessageBus(api.MessageBus):
     def __init__(self) -> None:
         self._handlers: t.Dict[type, t.List[t.Callable]] = defaultdict(list)
 
@@ -16,7 +13,7 @@ class MessageBus:
 
     def handle(self, message: object) -> t.List[t.Any]:
         if not self.has_handler_for(message.__class__):
-            raise MessageHandlerNotFoundError(
+            raise api.MessageHandlerNotFoundError(
                 f"No handler found for message class '{message.__class__}''"
             )
         handlers = self._handlers[message.__class__]

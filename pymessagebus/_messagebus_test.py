@@ -1,6 +1,9 @@
+# pylint:  skip-file
+
 import pytest
 
-from ._messagebus import MessageBus, MessageHandlerNotFoundError
+from pymessagebus.api import MessageHandlerNotFoundError
+from pymessagebus._messagebus import MessageBus
 
 
 def test_simplest_handler():
