@@ -5,8 +5,10 @@ from pymessagebus._messagebus import MessageBus
 
 
 class CommandBus(api.CommandBus):
-    def __init__(self, allow_result: bool = True) -> None:
-        self._messagebus = MessageBus()
+    def __init__(
+        self, *, middleswares: t.List[api.Middleware] = None, allow_result: bool = True
+    ) -> None:
+        self._messagebus = MessageBus(middleswares=middleswares)
         self._allow_result: bool = allow_result
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
@@ -22,6 +24,7 @@ class CommandBus(api.CommandBus):
                 f"No command handler is registed for message class '{message.__class__}'."
             )
         result = self._messagebus.handle(message)
+        print(result)
         return result[0] if self._allow_result else None
 
     def has_handler_for(self, message_class: type) -> bool:

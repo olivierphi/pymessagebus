@@ -1,13 +1,10 @@
 # pylint: skip-file
+import typing as t
 
 import pytest
 
+from pymessagebus import api
 from pymessagebus._commandbus import CommandBus
-from pymessagebus.api import (
-    CommandHandlerAlreadyRegisteredForATypeError,
-    CommandHandlerNotFoundError,
-    MessageHandlerMappingRequiresATypeError,
-)
 
 
 def test_simplest_handler():
@@ -49,7 +46,7 @@ def test_handler_must_be_registered_for_a_message_type():
     sut = CommandBus()
 
     message = EmptyMessage()
-    with pytest.raises(CommandHandlerNotFoundError):
+    with pytest.raises(api.CommandHandlerNotFoundError):
         sut.handle(message)
 
 
@@ -57,7 +54,7 @@ def test_handler_message_must_be_a_type():
     sut = CommandBus()
 
     not_a_type = EmptyMessage()
-    with pytest.raises(MessageHandlerMappingRequiresATypeError):
+    with pytest.raises(api.MessageHandlerMappingRequiresATypeError):
         sut.add_handler(not_a_type, get_one)
 
 
@@ -65,7 +62,7 @@ def test_multiple_handlers_for_single_message_triggers_error():
     sut = CommandBus()
     sut.add_handler(EmptyMessage, get_one)
 
-    with pytest.raises(CommandHandlerAlreadyRegisteredForATypeError):
+    with pytest.raises(api.CommandHandlerAlreadyRegisteredForATypeError):
         sut.add_handler(EmptyMessage, get_one)
 
 
@@ -85,6 +82,44 @@ def test_handler_is_triggered_each_time():
     assert handling_result == 1
     handling_result = sut.handle(message)
     assert handling_result == 2
+
+
+def test_middlewares():
+    class MessageWithList(t.NamedTuple):
+        payload: t.List[str]
+
+    def middleware_one(message: MessageWithList, next: api.CallNextMiddleware):
+        message.payload.append("middleware one: does something before the handler")
+        result = next(message)
+        message.payload.append("middleware one: does something after the handler")
+        return result
+
+    def middleware_two(message: MessageWithList, next: api.CallNextMiddleware):
+        message.payload.append("middleware two: does something before the handler")
+        result = next(message)
+        message.payload.append("middleware two: does something after the handler")
+        return result
+
+    def handler(message: MessageWithList) -> str:
+        message.payload.append("handler does something")
+        return "handler result"
+
+    # We already tests simpler cases on the MessageBus test suite, so we will only test the most complex case here:
+    sut = CommandBus(middleswares=[middleware_one, middleware_two])
+    # sut = CommandBus()
+    sut.add_handler(MessageWithList, handler)
+
+    message = MessageWithList(payload=["initial message payload"])
+    result = sut.handle(message)
+    assert message.payload == [
+        "initial message payload",
+        "middleware one: does something before the handler",
+        "middleware two: does something before the handler",
+        "handler does something",
+        "middleware two: does something after the handler",
+        "middleware one: does something after the handler",
+    ]
+    assert result == "handler result"
 
 
 class EmptyMessage:

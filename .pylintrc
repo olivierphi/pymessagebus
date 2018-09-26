@@ -7,4 +7,5 @@ filterwarnings =
     ignore::DeprecationWarning
 
 [MESSAGES CONTROL]
-disable=missing-docstring,useless-import-alias
+# (we have do disable "bad-continuation" because it's not compatible with the formatting applied by Black)
+disable=missing-docstring,useless-import-alias,bad-continuation
