@@ -9,7 +9,7 @@ class MessageBus(api.MessageBus):
         self._handlers: t.Dict[type, t.List[t.Callable]] = defaultdict(list)
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
-        if type(message_class) is not type:  # pylint: disable=unidiomatic-typecheck
+        if not isinstance(message_class, type):
             raise api.MessageHandlerMappingRequiresATypeError(
                 f"add_handler() first argument must be a type, got '{type(message_class)}"
             )
