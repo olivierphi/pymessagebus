@@ -13,6 +13,7 @@ from pymessagebus.api import (
 def test_simplest_handler():
     sut = CommandBus()
     sut.add_handler(EmptyMessage, get_one)
+
     message = EmptyMessage()
     handling_result = sut.handle(message)
     assert handling_result == 1
@@ -24,6 +25,15 @@ def test_has_handler_for():
 
     assert sut.has_handler_for(MessageClassOne) is True
     assert sut.has_handler_for(MessageClassTwo) is False
+
+
+def test_commandbus_can_be_configured_to_not_return_anything_on_command_handling():
+    sut = CommandBus(allow_result=False)
+    sut.add_handler(MessageClassOne, get_one)
+
+    message = MessageClassOne()
+    handling_result = sut.handle(message)
+    assert handling_result is None
 
 
 def test_handlers_get_message():

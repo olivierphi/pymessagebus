@@ -5,8 +5,9 @@ from pymessagebus._messagebus import MessageBus
 
 
 class CommandBus(api.CommandBus):
-    def __init__(self):
+    def __init__(self, allow_result: bool = True) -> None:
         self._messagebus = MessageBus()
+        self._allow_result: bool = allow_result
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
         if self._messagebus.has_handler_for(message_class):
@@ -21,7 +22,7 @@ class CommandBus(api.CommandBus):
                 f"No command handler is registed for message class '{message.__class__}'."
             )
         result = self._messagebus.handle(message)
-        return result[0]
+        return result[0] if self._allow_result else None
 
     def has_handler_for(self, message_class: type) -> bool:
         return self._messagebus.has_handler_for(message_class)
