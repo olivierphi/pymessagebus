@@ -15,6 +15,12 @@ You can have a look at the following URLs to learn more about this design patter
 - http://tactician.thephpleague.com/ - this is a pretty good and pragamatic PHP implementation of the CommandBus pattern, which clear explanations about the pattern
 - http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit purer since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
 
+## Install
+
+```bash
+$ pip install pymessagebus
+```
+
 ## Synopsis
 
 A naive example of how the CommandBus allows one to keep the business actions (Commands) decoupled from the implementation of their effet (the Command Handlers):
