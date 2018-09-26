@@ -9,7 +9,7 @@ import typing as t
 def _default_messagebus_unloaded_after_test():
     # Since our "default" MessageBus is just a convenient singleton with a handy decorator,
     # we have to reload it everytime we finish a test (or we will find the previous used one for the next test)
-    import pymessagebus.default.messagebus as default_messagebus
+    from pymessagebus.default import messagebus as default_messagebus
 
     try:
         yield default_messagebus
@@ -29,7 +29,7 @@ def test_its_well_and_truly_a_singleton():
             def handler(msg):
                 return 10
 
-            import pymessagebus.default.messagebus as default_messagebus
+            from pymessagebus.default import messagebus as default_messagebus
 
             default_messagebus.add_handler(EmptyMessage, handler)
             message = EmptyMessage()
@@ -43,7 +43,7 @@ def test_its_well_and_truly_a_singleton():
             def handler(msg):
                 return 20
 
-            import pymessagebus.default.messagebus as default_messagebus
+            from pymessagebus.default import messagebus as default_messagebus
 
             default_messagebus.add_handler(EmptyMessage, handler)
             message = EmptyMessage()

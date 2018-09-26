@@ -13,7 +13,7 @@ from pymessagebus.api import CommandHandlerAlreadyRegisteredForATypeError
 def _default_commandbus_unloaded_after_test():
     # Since our "default" CommandBus is just a convenient singleton with a handy decorator,
     # we have to reload it everytime we finish a test (or we will find the previous used one for the next test)
-    import pymessagebus.default.commandbus as default_commandbus
+    from pymessagebus.default import commandbus as default_commandbus
 
     try:
         yield default_commandbus
@@ -33,7 +33,7 @@ def test_its_well_and_truly_a_singleton():
             def handler(msg):
                 return 10
 
-            import pymessagebus.default.commandbus as default_commandbus
+            from pymessagebus.default import commandbus as default_commandbus
 
             default_commandbus.add_handler(EmptyMessage, handler)
             message = EmptyMessage()
@@ -47,7 +47,7 @@ def test_its_well_and_truly_a_singleton():
             def handler(msg):
                 return 20
 
-            import pymessagebus.default.commandbus as default_commandbus
+            from pymessagebus.default import commandbus as default_commandbus
 
             # Now we should trigger an error, since we're re-using the same singleton:
             with pytest.raises(CommandHandlerAlreadyRegisteredForATypeError):
