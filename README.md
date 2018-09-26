@@ -201,3 +201,13 @@ def post_customer(params):
 ```
 
 You can notice that the difference with the first synopsis is that here we don't have to instantiate the CommandBus, and that the `handle_customer_creation` function is registered to it automaticallyby using the decorator.
+
+## Code quality
+
+The code itself is formatted with Black and checked with PyLint and MyPy.
+
+The whole package comes with a full test suite, managed by PyTest.
+
+```bash
+$ make test
+```
