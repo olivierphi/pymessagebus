@@ -6,14 +6,14 @@ Pymessagebus is a message bus library. It comes with a generic MessageBus class 
 
 N.B.: here the "Message Bus" / "Command Bus" terms refer to a design patterns, and have nothing to do with messaging systems like RabbitMQ. (even though they can be used together)
 
-I created it because I've been using this diesgn pattern for years while working on Symfony applications, and I really find it a pretty simple and efficient way to decouple the business actions from their implementations.
+I created it because I've been using this design pattern for years while working on Symfony applications, and I really find it a pretty simple and efficient way to decouple the business actions from their implementations.
 
-You can have a look at the following URLs to learn more about this design pattern:  
-_(they speak about PHP but the pattern can be applied to any language)_
+You can have a look at the following URLs to learn more about this design pattern:
 
-- https://matthiasnoback.nl/2015/01/a-wave-of-command-buses/ - a great series of articles explaining the design pattern
-- http://tactician.thephpleague.com/ - this is a pretty good and pragamatic implementation of the CommandBus pattern, which clear explanations about the pattern
-- http://docs.simplebus.io/en/latest/ - another excellent implementation, a bit purer since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
+- https://matthiasnoback.nl/2015/01/a-wave-of-command-buses/ - a great series of articles explaining the design pattern, using PHP
+- https://en.wikipedia.org/wiki/Command_pattern
+- http://tactician.thephpleague.com/ - this is a pretty good and pragamatic PHP implementation of the CommandBus pattern, which clear explanations about the pattern
+- http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit purer since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
 
 ## Synopsis
 
