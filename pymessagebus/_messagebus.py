@@ -19,10 +19,8 @@ class MessageBus(api.MessageBus):
     def handle(self, message: object) -> t.List[t.Any]:
         if not self.has_handler_for(message.__class__):
             return []
-        handlers = self._handlers[message.__class__]
-        results = []
-        for handler in handlers:
-            results.append(self._trigger_handler(message, handler))
+        handlers: t.List[t.Callable] = self._handlers[message.__class__]
+        results = [self._trigger_handler(message, handler) for handler in handlers]
         return results
 
     def has_handler_for(self, message_class: type) -> bool:
