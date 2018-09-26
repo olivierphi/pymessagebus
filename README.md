@@ -160,6 +160,42 @@ assert message.payload == [
 assert result == "handler result"
 ```
 
+#### Logging middleware
+
+For convenience a "logging" middleware comes with the package.
+
+Synopis
+
+```python
+import logging
+from pymessagebus.middleware.logger import get_logger_middleware
+
+logger = logging.getLogger("message_bus")
+logging_middleware = get_logger_middleware(logger)
+
+message_bus = MessageBus(middlewares=[logging_middleware])
+
+# Now you will get logging messages:
+#  - when a message is sent on the bus (default logging level: DEBUG)
+#  - when a message has been successfully handled by the bus, with no Exception raised (default logging level: DEBUG)
+#  - when the processing of a message has raised an Exception (default logging level: ERROR)
+```
+
+You can customise the logging levels of the middleware via the `LoggingMiddlewareConfig` class:
+
+```python
+import logging
+from pymessagebus.middleware.logger import get_logger_middleware, LoggingMiddlewareConfig
+
+logger = logging.getLogger("message_bus")
+logging_middleware_config = LoggingMiddlewareConfig(
+    mgs_received_level=logging.INFO,
+    mgs_succeeded_level=logging.INFO,
+    mgs_failed_level=logging.CRITICAL
+)
+logging_middleware = get_logger_middleware(logger, logging_middleware_config)
+```
+
 ### "default" singletons
 
 Because most of the use cases of those buses rely on a single instance of the bus, for commodity you can also use singletons for both the MessageBus and CommandBus, in a "default" subpackage.
