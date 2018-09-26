@@ -1,11 +1,9 @@
 # pylint:  skip-file
+import typing as t
 
 import pytest
 
-from pymessagebus.api import (
-    MessageHandlerMappingRequiresATypeError,
-    MessageHandlerMappingRequiresACallableError,
-)
+from pymessagebus import api
 from pymessagebus._messagebus import MessageBus
 
 
@@ -47,7 +45,7 @@ def test_handler_message_must_be_a_type():
     sut = MessageBus()
 
     not_a_type = EmptyMessage()
-    with pytest.raises(MessageHandlerMappingRequiresATypeError):
+    with pytest.raises(api.MessageHandlerMappingRequiresATypeError):
         sut.add_handler(not_a_type, get_one)
 
 
@@ -55,7 +53,7 @@ def test_handler_handler_must_be_a_callable():
     sut = MessageBus()
 
     not_a_callable = 2
-    with pytest.raises(MessageHandlerMappingRequiresACallableError):
+    with pytest.raises(api.MessageHandlerMappingRequiresACallableError):
         sut.add_handler(EmptyMessage, not_a_callable)
 
 
@@ -111,6 +109,77 @@ def test_handler_is_triggered_each_time():
     assert handling_result == [1]
     handling_result = sut.handle(message)
     assert handling_result == [2]
+
+
+def test_middlewares():
+    class MessageWithList(t.NamedTuple):
+        payload: t.List[str]
+
+    def middleware_one(message: MessageWithList, next: api.CallNextMiddleware):
+        message.payload.append("middleware one: does something before the handler")
+        result = next(message)
+        message.payload.append("middleware one: does something after the handler")
+        return result
+
+    def middleware_two(message: MessageWithList, next: api.CallNextMiddleware):
+        message.payload.append("middleware two: does something before the handler")
+        result = next(message)
+        message.payload.append("middleware two: does something after the handler")
+        return result
+
+    def handler_one(message: MessageWithList):
+        message.payload.append("handler one does something")
+        return "handler one result"
+
+    def handler_two(message: MessageWithList):
+        message.payload.append("handler two does something")
+        return "handler two result"
+
+    # 1. Simplest test: one handler, one middleware
+    sut1 = MessageBus(middleswares=[middleware_one])
+    sut1.add_handler(MessageWithList, handler_one)
+
+    message1 = MessageWithList(payload=[])
+    result1 = sut1.handle(message1)
+    assert result1 == ["handler one result"]
+    assert message1.payload == [
+        "middleware one: does something before the handler",
+        "handler one does something",
+        "middleware one: does something after the handler",
+    ]
+
+    # 2. Next step: one handler, multiple middlewares
+    sut2 = MessageBus(middleswares=[middleware_one, middleware_two])
+    sut2.add_handler(MessageWithList, handler_one)
+
+    message2 = MessageWithList(payload=[])
+    result2 = sut2.handle(message2)
+    assert result2 == ["handler one result"]
+    assert message2.payload == [
+        "middleware one: does something before the handler",
+        "middleware two: does something before the handler",
+        "handler one does something",
+        "middleware two: does something after the handler",
+        "middleware one: does something after the handler",
+    ]
+
+    # 3. Ultimate step: multiple handlers, multiple middlewares
+    sut3 = MessageBus(middleswares=[middleware_one, middleware_two])
+    sut3.add_handler(MessageWithList, handler_one)
+    sut3.add_handler(MessageWithList, handler_two)
+
+    message3 = MessageWithList(payload=["initial message payload"])
+    result3 = sut3.handle(message3)
+    assert result3 == ["handler one result", "handler two result"]
+    assert message3.payload == [
+        "initial message payload",
+        "middleware one: does something before the handler",
+        "middleware two: does something before the handler",
+        "handler one does something",
+        "handler two does something",
+        "middleware two: does something after the handler",
+        "middleware one: does something after the handler",
+    ]
 
 
 class EmptyMessage:

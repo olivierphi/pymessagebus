@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 import typing as t
 
+CallNextMiddleware = t.Callable[[object], t.Any]
+Middleware = t.Callable[[object, CallNextMiddleware], t.Any]
+
 
 class MessageBus(ABC):
     @abstractmethod
