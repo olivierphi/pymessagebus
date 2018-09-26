@@ -1,5 +1,7 @@
 # pymessagebus
 
+[![Build Status](https://travis-ci.org/DrBenton/pymessagebus.svg?branch=master)](https://travis-ci.org/DrBenton/pymessagebus)
+
 Pymessagebus is a message bus library. It comes with a generic MessageBus class and a more specialised CommandBus one.
 
 N.B.: here the "Message Bus" / "Command Bus" terms refer to a design patterns, and have nothing to do with messaging systems like RabbitMQ. (even though they can be used together)
