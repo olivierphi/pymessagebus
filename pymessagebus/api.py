@@ -38,6 +38,10 @@ class MessageHandlerMappingRequiresATypeError(MessageBusError):
     pass
 
 
+class MessageHandlerMappingRequiresACallableError(MessageBusError):
+    pass
+
+
 class CommandHandlerNotFoundError(MessageBusError):
     pass
 

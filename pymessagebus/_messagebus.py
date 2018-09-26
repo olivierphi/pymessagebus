@@ -13,6 +13,10 @@ class MessageBus(api.MessageBus):
             raise api.MessageHandlerMappingRequiresATypeError(
                 f"add_handler() first argument must be a type, got '{type(message_class)}"
             )
+        if not callable(message_handler):
+            raise api.MessageHandlerMappingRequiresACallableError(
+                f"add_handler() second argument must be a callable, got '{type(message_handler)}"
+            )
 
         self._handlers[message_class].append(message_handler)
 

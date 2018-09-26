@@ -35,7 +35,7 @@ def test_handlers_get_message():
     assert handling_result == message
 
 
-def test_simplest_handler_not_found():
+def test_handler_must_be_registered_for_a_message_type():
     sut = CommandBus()
 
     message = EmptyMessage()
@@ -43,11 +43,12 @@ def test_simplest_handler_not_found():
         sut.handle(message)
 
 
-def test_handler_is_not_a_type():
+def test_handler_message_must_be_a_type():
     sut = CommandBus()
 
+    not_a_type = EmptyMessage()
     with pytest.raises(MessageHandlerMappingRequiresATypeError):
-        sut.add_handler(EmptyMessage(), get_one)
+        sut.add_handler(not_a_type, get_one)
 
 
 def test_multiple_handlers_for_single_message_triggers_error():

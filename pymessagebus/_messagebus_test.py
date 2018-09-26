@@ -2,7 +2,10 @@
 
 import pytest
 
-from pymessagebus.api import MessageHandlerMappingRequiresATypeError
+from pymessagebus.api import (
+    MessageHandlerMappingRequiresATypeError,
+    MessageHandlerMappingRequiresACallableError,
+)
 from pymessagebus._messagebus import MessageBus
 
 
@@ -40,11 +43,20 @@ def test_handlers_get_message():
     assert handling_result == [message]
 
 
-def test_handler_is_not_a_type():
+def test_handler_message_must_be_a_type():
     sut = MessageBus()
 
+    not_a_type = EmptyMessage()
     with pytest.raises(MessageHandlerMappingRequiresATypeError):
-        sut.add_handler(EmptyMessage(), get_one)
+        sut.add_handler(not_a_type, get_one)
+
+
+def test_handler_handler_must_be_a_callable():
+    sut = MessageBus()
+
+    not_a_callable = 2
+    with pytest.raises(MessageHandlerMappingRequiresACallableError):
+        sut.add_handler(EmptyMessage, not_a_callable)
 
 
 def test_multiple_handlers_for_single_message():
