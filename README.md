@@ -4,20 +4,26 @@
 
 Pymessagebus is a message bus library. It comes with a generic MessageBus class and a more specialised CommandBus one.
 
-N.B.: here the "Message Bus" / "Command Bus" terms refer to a design patterns, and have nothing to do with messaging systems like RabbitMQ. (even though they can be used together)
+_N.B.: here the "Message Bus" / "Command Bus" terms refer to a design patterns, and have nothing to do with messaging systems like RabbitMQ. (even though they can be used together)_
 
-I created it because I've been using this design pattern for years while working on Symfony applications, and I really find it a pretty simple and efficient way to decouple the business actions from their implementations.
+I created it because I've been using this design pattern for years while working on Symfony applications, and it never disappointed me - it's really a pretty simple and efficient way to decouple the business actions from their implementations.
 
 You can have a look at the following URLs to learn more about this design pattern:
 
-- https://matthiasnoback.nl/2015/01/a-wave-of-command-buses/ - a great series of articles explaining the design pattern, using PHP
+- https://matthiasnoback.nl/2015/01/a-wave-of-command-buses/ - a great series of articles explaining the design pattern - it uses PHP but that doesn't matter, the pattern is the same whatever the language is :-)
+- http://tactician.thephpleague.com/ - this is a pretty good and pragamatic PHP implementation of the CommandBus pattern, with clear explanations about the pattern
+- http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit more pure since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
 - https://en.wikipedia.org/wiki/Command_pattern
-- http://tactician.thephpleague.com/ - this is a pretty good and pragamatic PHP implementation of the CommandBus pattern, which clear explanations about the pattern
-- http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit purer since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
+
+## Install
+
+```bash
+$ pip install "pymessagebus==1.*"
+```
 
 ## Synopsis
 
-A naive example of how the CommandBus allows one to keep the business actions (Commands) decoupled from the implementation of their effet (the Command Handlers):
+A naive example of how the CommandBus allows one to keep the business actions (Commands) decoupled from the implementation of their effect (the Command Handlers):
 
 ```python
 # domain.py
@@ -61,7 +67,7 @@ def post_customer(params):
 
 The `MessageBus` class allows one to trigger one or multiple handlers when a
 message of a given type is sent on the bus.  
-The result is an array of results, where each item is the result of one the handler execution.
+The result is an array of results, where each item is the result of one the handlers execution.
 
 ```python
 class BusinessMessage(t.NamedTuple):
@@ -82,34 +88,34 @@ result = message_bus.handle(message)
 # result = ["handler one result: 33", "handler one result: 34"]
 ```
 
-The API is therefore very straightforward (you can see it as an abstract class in the [api](/pymessagebus/api.py) module):
+The API is therefore pretty straightforward (you can see it as an abstract class in the [api](/pymessagebus/api.py) module):
 
-- `add_handler(message_class: type, message_handler: t.Callable) -> None` adds a handler, that will be triggered by the instance of the bus when a message of this class is sent to it
+- `add_handler(message_class: type, message_handler: t.Callable) -> None` adds a handler, that will be triggered by the instance of the bus when a message of this class is sent to it.
 - `handle(message: object) -> t.List[t.Any]` trigger the handler(s) previously registered for that message class. If no handler has been registered for this kind of message, an empty list is returned.
 - `has_handler_for(message_class: type) -> bool` just allows one to check if one or more handlers have been registered for a given message class.
 
 #### CommandBus
 
-The `CommandBus` is a specialised version of a `MessageBus` (technically it's just a proxy on top of a MessageBus, which adds the management of those specificities), which comes with the following differences:
+The `CommandBus` is a specialised version of a `MessageBus` (technically it's just a proxy on top of a MessageBus, which adds the management of those specificities), which comes with the following subtleties:
 
 - Only one handler can be registered for a given message class
 - When a message is sent to the bus via the `handle` method, an error will be raised if no handler has been registered for this message class.
 
-In short, a Command Bus assumes that it's mandatory to a handler triggered for a business action - an to have only one.
+**In short, a Command Bus assumes that it's mandatory to a handler triggered for every business action we send on it - an to have only one.**
 
-The API is thus exactly the same than the MessageBus, with those technical differences:
+The API is thus exactly the same than the MessageBus, with the following technical differences:
 
 - the `add_handler(message_class, handler)` method will raise a `api.CommandHandlerAlreadyRegisteredForATypeError` exception if one tries to register a handler for a class of message for which another handler has already been registered before.
 - the `handle(message)` method returns a single result rather than a list of result (as we can - and must - have only one single handler for a given message class). If no handler has been registered for this message class, a `api.CommandHandlerNotFoundError` exception is raised.
-- it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the clas is instaciated (the default value being `False`). In that case the result of the `handle(message)` will always be `None`. That way one can follow a purer version of the dessign pattern.
+- it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the clas is instaciated (the default value being `False`). In that case the result of the `handle(message)` will always be `None`. That way one can follow a more pure version of the design pattern. (and access the result of the COmmand handling via the application repositories)
 
 #### Middlewares
 
 Last but not least, both kinds of buses can accept Middlewares.
 
-A Middleware is a function that receives a message (sent to the bus) as its first argument and a "next_middleware" function as second argument. That function can do some custom processing before or/and after the next Middleware (or the execution of the handler(s) regiested for that kind of message) is triggered.
+A Middleware is a function that receives a message (sent to the bus) as its first argument and a "next_middleware" function as second argument. That function can do some custom processing before or/and after the next Middleware (or the execution of the handler(s) registered for that kind of message) is triggered.
 
-Middlewares are triggered in a "onion shape": in the case of 2 Middleares for example:
+Middlewares are triggered in a "onion shape": in the case of 2 Middlweares for example:
 
 - the first registered Middleware "pre-processing" will be executed first
 - the second one will come after
@@ -198,7 +204,7 @@ logging_middleware = get_logger_middleware(logger, logging_middleware_config)
 
 ### "default" singletons
 
-Because most of the use cases of those buses rely on a single instance of the bus, for commodity you can also use singletons for both the MessageBus and CommandBus, in a "default" subpackage.
+Because most of the use cases of those buses rely on a single instance of the bus, for commodity you can also use singletons for both the MessageBus and CommandBus, accessible from a "default" subpackage.
 
 These versions also expose a very handy `register_handler(message_class: type)` decorator.
 
@@ -238,7 +244,7 @@ def post_customer(params):
     return customer_id
 ```
 
-You can notice that the difference with the first synopsis is that here we don't have to instantiate the CommandBus, and that the `handle_customer_creation` function is registered to it automaticallyby using the decorator.
+You can notice that the difference with the first synopsis is that here we don't have to instantiate the CommandBus, and that the `handle_customer_creation` function is registered to it automatically by using the decorator.
 
 ## Code quality
 
