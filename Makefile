@@ -8,7 +8,7 @@ test:
 
 .PHONY: package-clean
 package-clean:
-	rm -rf .cache/ .eggs/ build/ dist/ *.egg-info
+	rm -rf .cache/ .eggs/ build/ dist/ **/*.egg-info
 
 .PHONY: package-build
 package-build: package-clean
