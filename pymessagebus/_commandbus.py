@@ -24,7 +24,6 @@ class CommandBus(api.CommandBus):
                 f"No command handler is registed for message class '{message.__class__}'."
             )
         result = self._messagebus.handle(message)
-        print(result)
         return result[0] if self._allow_result else None
 
     def has_handler_for(self, message_class: type) -> bool:
