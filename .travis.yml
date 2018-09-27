@@ -3,6 +3,11 @@ python:
   - "3.6"
   - "3.7-dev"
 install:
-  - pip install -U pytest pylint mypy "black==18.6b4" pytest-pylint pytest-mypy pytest-black
+  - pip install -U pytest pylint mypy "black==18.6b4"
+  - pip install -U pytest-pylint pytest-mypy pytest-black
+  # Code coverage:
+  - pip install -U coverage python-coveralls pytest-cov
 script:
-  - make test
+  - pytest --pylint --black --mypy --cov pymessagebus --cov-report term-missing pymessagebus
+after_success:
+  - coveralls
