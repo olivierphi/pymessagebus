@@ -1,8 +1,14 @@
 # pymessagebus
 
-<!-- [![Build Status](https://travis-ci.org/DrBenton/pymessagebus.svg?branch=master)](https://travis-ci.org/DrBenton/pymessagebus) -->
+<h2 align="center">a Message/Command Bus for Python</h2>
 
-Pymessagebus is a message bus library. It comes with a generic MessageBus class and a more specialised CommandBus one.
+<p align="center">
+<a href="https://travis-ci.org/DrBenton/pymessagebus"><img alt="Build Status" src="https://travis-ci.org/DrBenton/pymessagebus.svg?branch=master"></a>
+<a href='https://coveralls.io/github/DrBenton/pymessagebus?branch=master'><img src="https://coveralls.io/repos/github/DrBenton/pymessagebus/badge.svg?branch=master" alt="Coverage Status" /></a>
+<a href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+</p>
+
+Pymessagebus is a message bus library. It comes with a generic MessageBus class as well as a more specialised CommandBus one.
 
 _N.B.: here the "Message Bus" / "Command Bus" terms refer to a design patterns, and have nothing to do with messaging systems like RabbitMQ. (even though they can be used together)_
 
