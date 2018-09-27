@@ -1,6 +1,6 @@
 # pymessagebus
 
-[![Build Status](https://travis-ci.org/DrBenton/pymessagebus.svg?branch=master)](https://travis-ci.org/DrBenton/pymessagebus)
+<!-- [![Build Status](https://travis-ci.org/DrBenton/pymessagebus.svg?branch=master)](https://travis-ci.org/DrBenton/pymessagebus) -->
 
 Pymessagebus is a message bus library. It comes with a generic MessageBus class and a more specialised CommandBus one.
 
@@ -107,7 +107,13 @@ The API is thus exactly the same than the MessageBus, with the following technic
 
 - the `add_handler(message_class, handler)` method will raise a `api.CommandHandlerAlreadyRegisteredForATypeError` exception if one tries to register a handler for a class of message for which another handler has already been registered before.
 - the `handle(message)` method returns a single result rather than a list of result (as we can - and must - have only one single handler for a given message class). If no handler has been registered for this message class, a `api.CommandHandlerNotFoundError` exception is raised.
-- it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the clas is instaciated (the default value being `False`). In that case the result of the `handle(message)` will always be `None`. That way one can follow a more pure version of the design pattern. (and access the result of the COmmand handling via the application repositories)
+
+##### Additional options for the CommandBus
+
+The CommandBus constructor have additional options that you can use to customise its behaviour:
+
+- `allow_result`: it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the clas is instaciated (the default value being `False`). In that case the result of the `handle(message)` will always be `None`. That way one can follow a more pure version of the design pattern. (and access the result of the COmmand handling via the application repositories)
+- `locking`: by default the CommandBus will raise a `api.CommandBusAlreadyRunningAMessageError` exception if a message is sent to it while another message is still processed (which can happen if one of the Command Handlers sends a message to the bus). You can disable this behaviour by setting the named argument `locking=False` (the default value being `True`).
 
 #### Middlewares
 
