@@ -2,12 +2,16 @@ language: python
 python:
   - "3.6"
   - "3.7-dev"
+env:
+  global:
+    - PYTHONPATH=src/
+    - MYPYPATH=src/
 install:
   - pip install -U pytest pylint mypy "black==18.6b4"
   - pip install -U pytest-pylint pytest-mypy pytest-black
   # Code coverage:
   - pip install -U coverage python-coveralls pytest-cov
 script:
-  - pytest --pylint --black --mypy --cov pymessagebus --cov-report term-missing pymessagebus
+  - pytest --pylint --black --mypy --cov pymessagebus --cov-report term-missing
 after_success:
   - coveralls

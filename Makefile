@@ -4,11 +4,11 @@ PYPIRC ?= ~/.pypirc
 .PHONY: test
 test: ARGS ?=
 test:
-	@pytest --pylint --black --mypy ${ARGS} pymessagebus
+	@ PYTHONPATH=src/ MYPYPATH=src/ pytest --pylint --black --mypy ${ARGS}
 
 .PHONY: package-clean
 package-clean:
-	rm -rf .cache/ .eggs/ build/ dist/ *.egg-info
+	rm -rf .cache/ .eggs/ build/ dist/ **/*.egg-info
 
 .PHONY: package-build
 package-build: package-clean

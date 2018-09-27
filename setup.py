@@ -1,3 +1,8 @@
+# pylint: skip-file
+
+from glob import glob
+from os.path import basename, splitext
+
 import setuptools
 
 # Get the long description from the README file
@@ -6,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="pymessagebus",
-    version="1.0.0",
+    version="1.1.0",
     description="A simple implementation of the MessageBus / CommandBus pattern",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,14 +24,26 @@ setuptools.setup(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
-    keywords="CommandBus MessageBus CommandHandler",
-    packages=["pymessagebus"],
-    package_dir={"pymessagebus": "pymessagebus"},
+    keywords="CommandBus MessageBus CommandHandler DDD domain-driven-design design-pattern",
+    packages=setuptools.find_packages("src"),
+    package_dir={"": "src"},
+    py_modules=[splitext(basename(path))[0] for path in glob("src/**/*.py")],
+    include_package_data=True,
+    zip_safe=False,
     install_requires=[],
     python_requires=">=3.6",
-    extras_require={"dev": [], "test": ["pytest", "pylint"]},
-    setup_requires=["pytest-runner", "pytest-pylint", "pytest-mypy", "pytest-black"],
-    tests_require=["pytest", "pylint", "mypy", "black"],
+    tests_require=[
+        "pytest",
+        "pylint",
+        "mypy",
+        "black",
+        "pytest-pylint",
+        "pytest-mypy",
+        "pytest-black",
+    ],
 )

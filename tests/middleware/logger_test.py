@@ -29,12 +29,12 @@ def test_middleware_basic(caplog):
         assert len(log_records) == 2
         assert (
             log_records[0].msg
-            == "Message received: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message received: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[0].levelno == logging.DEBUG
         assert (
             log_records[1].msg
-            == "Message succeeded: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message succeeded: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[1].levelno == logging.DEBUG
 
@@ -55,12 +55,12 @@ def test_middleware_with_error(caplog):
         assert len(log_records) == 2
         assert (
             log_records[0].msg
-            == "Message received: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message received: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[0].levelno == logging.DEBUG
         assert (
             log_records[1].msg
-            == "Message failed: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message failed: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[1].levelno == logging.ERROR
 
@@ -83,12 +83,12 @@ def test_middleware_with_custom_log_levels(caplog):
 
         assert (
             log_records[0].msg
-            == "Message received: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message received: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[0].levelno == logging.CRITICAL
         assert (
             log_records[1].msg
-            == "Message succeeded: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message succeeded: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[1].levelno == logging.WARNING
 
@@ -112,12 +112,12 @@ def test_middleware_with_custom_log_levels_with_error(caplog):
 
         assert (
             log_records[0].msg
-            == "Message received: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message received: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[0].levelno == logging.WARNING
         assert (
             log_records[1].msg
-            == "Message failed: $<class 'pymessagebus.middleware.logger_test.MessageClassOne'>"
+            == "Message failed: $<class 'logger_test.MessageClassOne'>"
         )
         assert log_records[1].levelno == logging.INFO
 
