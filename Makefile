@@ -4,7 +4,7 @@ PYPIRC ?= ~/.pypirc
 .PHONY: test
 test: ARGS ?=
 test:
-	@pytest --pylint --black --mypy ${ARGS} pymessagebus
+	@ PYTHONPATH=src/ MYPYPATH=src/ pytest --pylint --black --mypy ${ARGS}
 
 .PHONY: package-clean
 package-clean:
