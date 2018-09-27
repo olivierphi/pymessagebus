@@ -3,6 +3,6 @@ python:
   - "3.6"
   - "3.7-dev"
 install:
-  - pip install -U pytest pylint mypy black pytest-pylint pytest-mypy pytest-black
+  - pip install -U pytest pylint mypy "black==18.6b4" pytest-pylint pytest-mypy pytest-black
 script:
   - make test

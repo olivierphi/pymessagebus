@@ -121,6 +121,49 @@ def test_middlewares():
     assert result == "handler result"
 
 
+def test_locking():
+    sut = None
+    test_list = []
+
+    class MessageWithPayload(t.NamedTuple):
+        payload: int
+
+    class OtherMessageWithPayload(MessageWithPayload):
+        pass
+
+    message = MessageWithPayload(payload=33)
+
+    def handler_which_triggers_handler_two(msg):
+        nonlocal test_list, sut
+        test_list.append(f"1:{msg.payload}")
+        result = sut.handle(OtherMessageWithPayload(payload=43))
+        return f"handler_one_was_here:{result}"
+
+    def handler_two(msg):
+        nonlocal test_list
+        test_list.append(f"2:{msg.payload}")
+        return "handler_two_was_here"
+
+    # With the default "locking" option expect an error to be raised
+    # if a message is sent to the bus while another one is still in progress:
+    sut = CommandBus()
+    sut.add_handler(MessageWithPayload, handler_which_triggers_handler_two)
+    sut.add_handler(OtherMessageWithPayload, handler_two)
+
+    with pytest.raises(api.CommandBusAlreadyRunningAMessageError):
+        sut.handle(message)
+
+    # But by setting the "locking" option to `False` we should be able to process a message even in such a case:
+    test_list = []
+    sut = CommandBus(locking=False)
+    sut.add_handler(MessageWithPayload, handler_which_triggers_handler_two)
+    sut.add_handler(OtherMessageWithPayload, handler_two)
+
+    result = sut.handle(message)
+    assert test_list == ["1:33", "2:43"]
+    assert result == "handler_one_was_here:handler_two_was_here"
+
+
 class EmptyMessage:
     pass
 

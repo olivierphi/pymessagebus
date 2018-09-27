@@ -43,6 +43,10 @@ class MessageBus(api.MessageBus):
     def _get_middlewares_callables_chain(
         middlewares: t.Union[t.List[api.Middleware], None], message_handler: t.Callable
     ) -> t.Callable[[object], t.Any]:
+        """
+        The algorithm comes from the source code of Tactician (PHP CommandBus):
+        https://github.com/thephpleague/tactician/blob/master/src/CommandBus.php#L50 :-)
+        """
         all_middlewares = (middlewares or []) + [message_handler]
 
         # the last "middleware" is actually the execution of the target Message Handler,
