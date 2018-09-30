@@ -46,7 +46,7 @@ def test_handler_must_be_registered_for_a_message_type():
     sut = CommandBus()
 
     message = EmptyMessage()
-    with pytest.raises(api.CommandHandlerNotFoundError):
+    with pytest.raises(api.CommandHandlerNotFound):
         sut.handle(message)
 
 
@@ -54,7 +54,7 @@ def test_handler_message_must_be_a_type():
     sut = CommandBus()
 
     not_a_type = EmptyMessage()
-    with pytest.raises(api.MessageHandlerMappingRequiresATypeError):
+    with pytest.raises(api.MessageHandlerMappingRequiresAType):
         sut.add_handler(not_a_type, get_one)
 
 
@@ -62,7 +62,7 @@ def test_multiple_handlers_for_single_message_triggers_error():
     sut = CommandBus()
     sut.add_handler(EmptyMessage, get_one)
 
-    with pytest.raises(api.CommandHandlerAlreadyRegisteredForATypeError):
+    with pytest.raises(api.CommandHandlerAlreadyRegisteredForAType):
         sut.add_handler(EmptyMessage, get_one)
 
 
@@ -150,7 +150,7 @@ def test_locking():
     sut.add_handler(MessageWithPayload, handler_which_triggers_handler_two)
     sut.add_handler(OtherMessageWithPayload, handler_two)
 
-    with pytest.raises(api.CommandBusAlreadyRunningAMessageError):
+    with pytest.raises(api.CommandBusAlreadyProcessingAMessage):
         sut.handle(message)
 
     # But by setting the "locking" option to `False` we should be able to process a message even in such a case:

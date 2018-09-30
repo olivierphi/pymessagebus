@@ -33,25 +33,25 @@ class CommandBus(ABC):
         pass
 
 
-class MessageBusError(BaseException):
+class MessageBusError(BaseException, ABC):
     pass
 
 
-class MessageHandlerMappingRequiresATypeError(MessageBusError):
+class MessageHandlerMappingRequiresAType(MessageBusError):
     pass
 
 
-class MessageHandlerMappingRequiresACallableError(MessageBusError):
+class MessageHandlerMappingRequiresACallable(MessageBusError):
     pass
 
 
-class CommandHandlerNotFoundError(MessageBusError):
+class CommandHandlerNotFound(MessageBusError):
     pass
 
 
-class CommandHandlerAlreadyRegisteredForATypeError(MessageBusError):
+class CommandHandlerAlreadyRegisteredForAType(MessageBusError):
     pass
 
 
-class CommandBusAlreadyRunningAMessageError(MessageBusError):
+class CommandBusAlreadyProcessingAMessage(MessageBusError):
     pass
