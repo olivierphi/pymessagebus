@@ -105,7 +105,7 @@ def test_middlewares():
         return "handler result"
 
     # We already tests simpler cases on the MessageBus test suite, so we will only test the most complex case here:
-    sut = CommandBus(middleswares=[middleware_one, middleware_two])
+    sut = CommandBus(middlewares=[middleware_one, middleware_two])
     sut.add_handler(MessageWithList, handler)
 
     message = MessageWithList(payload=["initial message payload"])

@@ -8,11 +8,11 @@ class CommandBus(api.CommandBus):
     def __init__(
         self,
         *,
-        middleswares: t.List[api.Middleware] = None,
+        middlewares: t.List[api.Middleware] = None,
         allow_result: bool = True,
         locking: bool = True,
     ) -> None:
-        self._messagebus = MessageBus(middleswares=middleswares)
+        self._messagebus = MessageBus(middlewares=middlewares)
         self._allow_result = bool(allow_result)
         self._locking = bool(locking)
         self._is_processing_a_message = False
