@@ -136,7 +136,7 @@ def test_middlewares():
         return "handler two result"
 
     # 1. Simplest test: one handler, one middleware
-    sut1 = MessageBus(middleswares=[middleware_one])
+    sut1 = MessageBus(middlewares=[middleware_one])
     sut1.add_handler(MessageWithList, handler_one)
 
     message1 = MessageWithList(payload=[])
@@ -149,7 +149,7 @@ def test_middlewares():
     ]
 
     # 2. Next step: one handler, multiple middlewares
-    sut2 = MessageBus(middleswares=[middleware_one, middleware_two])
+    sut2 = MessageBus(middlewares=[middleware_one, middleware_two])
     sut2.add_handler(MessageWithList, handler_one)
 
     message2 = MessageWithList(payload=[])
@@ -164,7 +164,7 @@ def test_middlewares():
     ]
 
     # 3. Ultimate step: multiple handlers, multiple middlewares
-    sut3 = MessageBus(middleswares=[middleware_one, middleware_two])
+    sut3 = MessageBus(middlewares=[middleware_one, middleware_two])
     sut3.add_handler(MessageWithList, handler_one)
     sut3.add_handler(MessageWithList, handler_two)
 

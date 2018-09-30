@@ -165,7 +165,8 @@ def handler(message: MessageWithList) -> str:
     message.payload.append("handler does something")
     return "handler result"
 
-sut.add_handler(MessageWithList, handler)
+message_bus = MessageBus(middlewares=[middleware_one, middleware_two])
+message_bus.add_handler(MessageWithList, handler)
 
 message = MessageWithList(payload=["initial message payload"])
 result = sut.handle(message)

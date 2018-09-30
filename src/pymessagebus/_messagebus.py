@@ -5,10 +5,10 @@ import pymessagebus.api as api
 
 
 class MessageBus(api.MessageBus):
-    def __init__(self, *, middleswares: t.List[api.Middleware] = None) -> None:
+    def __init__(self, *, middlewares: t.List[api.Middleware] = None) -> None:
         self._handlers: t.Dict[type, t.List[t.Callable]] = defaultdict(list)
         self._middlewares_chain = self._get_middlewares_callables_chain(
-            middleswares, self._trigger_handlers_for_message_as_a_middleware
+            middlewares, self._trigger_handlers_for_message_as_a_middleware
         )
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:

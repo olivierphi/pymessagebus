@@ -17,7 +17,7 @@ def test_middleware_basic(caplog):
     logger = logging.getLogger(logger_name)
 
     sut = get_logger_middleware(logger)
-    message_bus = MessageBus(middleswares=[sut])
+    message_bus = MessageBus(middlewares=[sut])
     message_bus.add_handler(MessageClassOne, get_one)
 
     message = MessageClassOne()
@@ -44,7 +44,7 @@ def test_middleware_with_error(caplog):
     logger = logging.getLogger(logger_name)
 
     sut = get_logger_middleware(logger)
-    message_bus = MessageBus(middleswares=[sut])
+    message_bus = MessageBus(middlewares=[sut])
     message_bus.add_handler(MessageClassOne, errorful_handler)
     message = MessageClassOne()
     with caplog.at_level(logging.DEBUG, logger=logger_name):
@@ -73,7 +73,7 @@ def test_middleware_with_custom_log_levels(caplog):
         mgs_received_level=logging.CRITICAL, mgs_succeeded_level=logging.WARNING
     )
     sut = get_logger_middleware(logger, sut_config)
-    message_bus = MessageBus(middleswares=[sut])
+    message_bus = MessageBus(middlewares=[sut])
     message_bus.add_handler(MessageClassOne, get_one)
 
     message = MessageClassOne()
@@ -101,7 +101,7 @@ def test_middleware_with_custom_log_levels_with_error(caplog):
         mgs_received_level=logging.WARNING, mgs_failed_level=logging.INFO
     )
     sut = get_logger_middleware(logger, sut_config)
-    message_bus = MessageBus(middleswares=[sut])
+    message_bus = MessageBus(middlewares=[sut])
     message_bus.add_handler(MessageClassOne, errorful_handler)
 
     message = MessageClassOne()
