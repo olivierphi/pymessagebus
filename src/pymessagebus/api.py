@@ -33,7 +33,7 @@ class CommandBus(ABC):
         pass
 
 
-class MessageBusError(BaseException, ABC):
+class MessageBusError(Exception, ABC):
     pass
 
 
