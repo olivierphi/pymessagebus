@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="pymessagebus",
-    version="1.2.0",
+    version="1.2.1",
     description="A simple implementation of the MessageBus / CommandBus pattern",
     long_description=long_description,
     long_description_content_type="text/markdown",
