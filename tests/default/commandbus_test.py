@@ -6,7 +6,7 @@ import typing as t
 
 import pytest
 
-from pymessagebus.api import CommandHandlerAlreadyRegisteredForATypeError
+from pymessagebus.api import CommandHandlerAlreadyRegisteredForAType
 
 
 @contextmanager
@@ -50,7 +50,7 @@ def test_its_well_and_truly_a_singleton():
             from pymessagebus.default import commandbus as default_commandbus
 
             # Now we should trigger an error, since we're re-using the same singleton:
-            with pytest.raises(CommandHandlerAlreadyRegisteredForATypeError):
+            with pytest.raises(CommandHandlerAlreadyRegisteredForAType):
                 default_commandbus.add_handler(EmptyMessage, handler)
 
         test2()
@@ -116,7 +116,7 @@ def test_multiple_decorators_for_same_message_type_triggers_an_error():
         def handler_one(msg):
             return 1
 
-        with pytest.raises(CommandHandlerAlreadyRegisteredForATypeError):
+        with pytest.raises(CommandHandlerAlreadyRegisteredForAType):
 
             @sut.register_handler(MessageClassOne)
             def handler_two(msg):

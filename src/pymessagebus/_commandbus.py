@@ -19,18 +19,18 @@ class CommandBus(api.CommandBus):
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
         if self._messagebus.has_handler_for(message_class):
-            raise api.CommandHandlerAlreadyRegisteredForATypeError(
+            raise api.CommandHandlerAlreadyRegisteredForAType(
                 f"A command handler is already registed for message class '{message_class}'."
             )
         self._messagebus.add_handler(message_class, message_handler)
 
     def handle(self, message: object) -> t.Any:
         if not self._messagebus.has_handler_for(message.__class__):
-            raise api.CommandHandlerNotFoundError(
+            raise api.CommandHandlerNotFound(
                 f"No command handler is registered for message class '{message.__class__}'."
             )
         if self._locking and self._is_processing_a_message:
-            raise api.CommandBusAlreadyRunningAMessageError(
+            raise api.CommandBusAlreadyProcessingAMessage(
                 f"CommandBus already processing a message when received a '{message.__class__}' one."  # pylint: disable=line-too-long
             )
         self._is_processing_a_message = True

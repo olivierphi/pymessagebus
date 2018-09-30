@@ -13,11 +13,11 @@ class MessageBus(api.MessageBus):
 
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
         if not isinstance(message_class, type):
-            raise api.MessageHandlerMappingRequiresATypeError(
+            raise api.MessageHandlerMappingRequiresAType(
                 f"add_handler() first argument must be a type, got '{type(message_class)}"
             )
         if not callable(message_handler):
-            raise api.MessageHandlerMappingRequiresACallableError(
+            raise api.MessageHandlerMappingRequiresACallable(
                 f"add_handler() second argument must be a callable, got '{type(message_handler)}"
             )
 

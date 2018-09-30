@@ -45,7 +45,7 @@ def test_handler_message_must_be_a_type():
     sut = MessageBus()
 
     not_a_type = EmptyMessage()
-    with pytest.raises(api.MessageHandlerMappingRequiresATypeError):
+    with pytest.raises(api.MessageHandlerMappingRequiresAType):
         sut.add_handler(not_a_type, get_one)
 
 
@@ -53,7 +53,7 @@ def test_handler_handler_must_be_a_callable():
     sut = MessageBus()
 
     not_a_callable = 2
-    with pytest.raises(api.MessageHandlerMappingRequiresACallableError):
+    with pytest.raises(api.MessageHandlerMappingRequiresACallable):
         sut.add_handler(EmptyMessage, not_a_callable)
 
 
