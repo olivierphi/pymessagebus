@@ -18,10 +18,18 @@ You can have a look at the following URLs to learn more about this design patter
 
 - https://matthiasnoback.nl/2015/01/a-wave-of-command-buses/ - a great series of articles explaining the design pattern - it uses PHP but that doesn't matter, the pattern is the same whatever the language is :-)
 - http://tactician.thephpleague.com/ - this is a pretty good and pragamatic PHP implementation of the CommandBus pattern, with clear explanations about the pattern
-- http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit more pure since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a COmmand, even if it's a bit less pure)_
+- http://docs.simplebus.io/en/latest/ - another excellent PHP implementation, a bit more pure since sending Commands on the CommandBus can't return values here. _(my personal experience is that it's often handy to be able to return something from the execution of a Command, even if it's a bit less pure)_
 - https://en.wikipedia.org/wiki/Command_pattern
 
 ## Install
+
+If you're using [Poetry](https://python-poetry.org/):
+
+```bash
+$ poetry install pymessagebus
+```
+
+Or, if you prefer using raw pip:
 
 ```bash
 $ pip install "pymessagebus==1.*"
@@ -72,7 +80,7 @@ def post_customer(params):
 #### MessageBus
 
 The `MessageBus` class allows one to trigger one or multiple handlers when a
-message of a given type is sent on the bus.  
+message of a given type is sent on the bus.
 The result is an array of results, where each item is the result of one the handlers execution.
 
 ```python
@@ -99,6 +107,7 @@ The API is therefore pretty straightforward (you can see it as an abstract class
 - `add_handler(message_class: type, message_handler: t.Callable) -> None` adds a handler, that will be triggered by the instance of the bus when a message of this class is sent to it.
 - `handle(message: object) -> t.List[t.Any]` trigger the handler(s) previously registered for that message class. If no handler has been registered for this kind of message, an empty list is returned.
 - `has_handler_for(message_class: type) -> bool` just allows one to check if one or more handlers have been registered for a given message class.
+- `remove_handler(message_class: type, message_handler: t.Callable) -> bool` removes a previously registered handler. Returns `True` if the handler was removed, `False` if such a handler was not previously registered.
 
 #### CommandBus
 
@@ -113,14 +122,15 @@ The API is thus exactly the same than the MessageBus, with the following technic
 
 - the `add_handler(message_class, handler)` method will raise a `api.CommandHandlerAlreadyRegisteredForAType` exception if one tries to register a handler for a class of message for which another handler has already been registered before.
 - the `handle(message)` method returns a single result rather than a list of result (as we can - and must - have only one single handler for a given message class). If no handler has been registered for this message class, a `api.CommandHandlerNotFound` exception is raised.
+- the `remove_handler(message_class: type) -> bool` only takes a single argument.
 
 ##### Additional options for the CommandBus
 
 The CommandBus constructor have additional options that you can use to customise its behaviour:
 
-- `allow_result`: it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the class is instanciated (the default value being `False`).  
+- `allow_result`: it's possible to be stricter about the implementation of the CommandBus pattern, by using the `allow_result=True` named parameter when the class is instanciated (the default value being `False`).
   In that case the result of the `handle(message)` will always be `None`. By doing this one can follow a more pure version of the design pattern. (and access the result of the Command handling via the application repositories, though a pre-generated id attached to the message for example)
-- `locking`: by default the CommandBus will raise a `api.CommandBusAlreadyProcessingAMessage` exception if a message is sent to it while another message is still processed (which can happen if one of the Command Handlers sends a message to the bus).  
+- `locking`: by default the CommandBus will raise a `api.CommandBusAlreadyProcessingAMessage` exception if a message is sent to it while another message is still processed (which can happen if one of the Command Handlers sends a message to the bus).
   You can disable this behaviour by setting the named argument `locking=False` (the default value being `True`).
 
 #### Middlewares

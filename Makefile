@@ -31,11 +31,10 @@ package-build: package-clean
 	${PYTHON_BINS}python setup.py bdist_wheel
 
 # The "upload" tasks require a "~/.pypicrc" file
-# @link https://docs.python.org/3/distutils/packageindex.html#pypirc
-# @link https://packaging.python.org/guides/using-testpypi/#setting-up-testpypi-in-pypirc
+# @link https://packaging.python.org/specifications/pypirc/
 .PHONY: package-upload-test
 package-upload-test: package-build
-	${PYTHON_BINS}python -m twine upload --config-file ${PYPIRC} --repository pypitest dist/*
+	${PYTHON_BINS}python -m twine upload --config-file ${PYPIRC} --repository testpypi dist/*
 
 .venv:
 	python3 -m venv .venv
