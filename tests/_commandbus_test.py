@@ -24,6 +24,16 @@ def test_has_handler_for():
     assert sut.has_handler_for(MessageClassTwo) is False
 
 
+def test_remove_handler():
+    sut = CommandBus()
+    sut.add_handler(MessageClassOne, get_one)
+    assert sut.has_handler_for(MessageClassOne)
+
+    assert sut.remove_handler(MessageClassOne) is True
+    assert sut.remove_handler(MessageClassOne) is False
+    assert sut.has_handler_for(MessageClassOne) is False
+
+
 def test_commandbus_can_be_configured_to_not_return_anything_on_command_handling():
     sut = CommandBus(allow_result=False)
     sut.add_handler(MessageClassOne, get_one)

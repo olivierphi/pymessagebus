@@ -1,7 +1,6 @@
 import typing as t
 
-import pymessagebus.api as api
-from pymessagebus._messagebus import MessageBus
+from ._messagebus import api, MessageBus
 
 
 class CommandBus(api.CommandBus):
@@ -23,6 +22,13 @@ class CommandBus(api.CommandBus):
                 f"A command handler is already registed for message class '{message_class}'."
             )
         self._messagebus.add_handler(message_class, message_handler)
+
+    def remove_handler(self, message_class: type) -> bool:
+        if not self._messagebus.has_handler_for(message_class):
+            return False
+        return self._messagebus.remove_handler(
+            message_class, self._messagebus._handlers[message_class][0]
+        )
 
     def handle(self, message: object) -> t.Any:
         if not self._messagebus.has_handler_for(message.__class__):

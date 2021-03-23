@@ -1,7 +1,7 @@
 from collections import defaultdict
 import typing as t
 
-import pymessagebus.api as api
+from . import api
 
 
 class MessageBus(api.MessageBus):
@@ -22,6 +22,31 @@ class MessageBus(api.MessageBus):
             )
 
         self._handlers[message_class].append(message_handler)
+
+    def remove_handler(self, message_class: type, message_handler: t.Callable) -> bool:
+        """
+        Returns `True` if a handler was found for this message class and caller and removed,
+        `False` otherwise
+        """
+        if not isinstance(message_class, type):
+            raise api.MessageHandlerMappingRequiresAType(
+                f"add_handler() first argument must be a type, got '{type(message_class)}"
+            )
+        if not callable(message_handler):
+            raise api.MessageHandlerMappingRequiresACallable(
+                f"add_handler() second argument must be a callable, got '{type(message_handler)}"
+            )
+        if message_class not in self._handlers:
+            return False
+        if message_handler not in self._handlers[message_class]:
+            return False
+
+        self._handlers[message_class].remove(message_handler)
+
+        if len(self._handlers[message_class]) == 0:
+            del self._handlers[message_class]
+
+        return True
 
     def handle(self, message: object) -> t.List[t.Any]:
         if not self.has_handler_for(message.__class__):
