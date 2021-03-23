@@ -31,6 +31,14 @@ def test_has_handler_for():
     assert sut.has_handler_for(MessageClassOne) is True
     assert sut.has_handler_for(MessageClassTwo) is False
 
+def test_remove_handler():
+    sut = MessageBus()
+    sut.add_handler(MessageClassOne, get_one)
+    assert sut.has_handler_for(MessageClassOne)
+
+    assert sut.remove_handler(MessageClassOne, get_one) is True
+    assert sut.remove_handler(MessageClassOne, get_two) is False
+    assert sut.has_handler_for(MessageClassOne) is False
 
 def test_handlers_get_message():
     sut = MessageBus()

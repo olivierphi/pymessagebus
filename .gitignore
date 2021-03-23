@@ -1,4 +1,6 @@
 
+/.venv
+
 /.eggs
 /build
 /dist
@@ -6,4 +8,3 @@
 
 /.mypy_cache
 /.vscode
-

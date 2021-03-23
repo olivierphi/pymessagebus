@@ -1,5 +1,5 @@
-import typing as t
 from abc import ABC, abstractmethod
+import typing as t
 
 CallNextMiddleware = t.Callable[[object], t.Any]
 Middleware = t.Callable[[object, CallNextMiddleware], t.Any]
@@ -8,6 +8,10 @@ Middleware = t.Callable[[object, CallNextMiddleware], t.Any]
 class MessageBus(ABC):
     @abstractmethod
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
+        pass
+
+    @abstractmethod
+    def remove_handler(self, message_class: type, message_handler: t.Callable) -> bool:
         pass
 
     @abstractmethod
@@ -22,6 +26,10 @@ class MessageBus(ABC):
 class CommandBus(ABC):
     @abstractmethod
     def add_handler(self, message_class: type, message_handler: t.Callable) -> None:
+        pass
+
+    @abstractmethod
+    def remove_handler(self, message_class: type) -> bool:
         pass
 
     @abstractmethod

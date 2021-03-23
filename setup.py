@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="pymessagebus",
-    version="1.2.2",
+    version="1.2.3",
     description="A simple implementation of the MessageBus / CommandBus pattern",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -28,6 +28,8 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     keywords="CommandBus MessageBus CommandHandler DDD domain-driven-design design-pattern decoupling",
     packages=setuptools.find_packages("src"),
@@ -42,8 +44,5 @@ setuptools.setup(
         "pylint",
         "mypy",
         "black",
-        "pytest-pylint",
-        "pytest-mypy",
-        "pytest-black",
     ],
 )
