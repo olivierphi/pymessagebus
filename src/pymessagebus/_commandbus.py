@@ -39,9 +39,13 @@ class CommandBus(api.CommandBus):
             raise api.CommandBusAlreadyProcessingAMessage(
                 f"CommandBus already processing a message when received a '{message.__class__}' one."  # pylint: disable=line-too-long
             )
-        self._is_processing_a_message = True
-        result = self._messagebus.handle(message)
-        self._is_processing_a_message = False
+
+        try:
+            self._is_processing_a_message = True
+            result = self._messagebus.handle(message)
+        finally:
+            self._is_processing_a_message = False
+
         return result[0] if self._allow_result else None
 
     def has_handler_for(self, message_class: type) -> bool:
